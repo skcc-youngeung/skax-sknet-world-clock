@@ -143,10 +143,4 @@
 ---
 
 *이 프로젝트는 LEE Youngeung에 의해 개발되었습니다.*
-*문의: 20eung@gmail.com*
-
-
----
-
-*This project was developed by LEE Youngeung.*
-*Contact: 20eung@gmail.com*
+*문의: i@sk.com*
