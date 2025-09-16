@@ -1,0 +1,493 @@
+:root {
+    --lime-green: #AFFF00;
+    --white-color: #ffffff;
+    --dark-gray: #333;
+    --black-color: #000;
+    --blue-jean: #5dadec;
+    --time-diff-positive: #FFD600;
+    --time-diff-negative: #FF00FF;
+}
+
+body {
+    background-color: var(--black-color);
+    color: var(--white-color);
+    font-family: 'Helvetica Neue', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.main-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--black-color);
+    padding-top: max(80px, env(safe-area-inset-top));
+    padding-right: max(10px, env(safe-area-inset-right));
+    padding-bottom: max(80px, env(safe-area-inset-bottom));
+    padding-left: max(10px, env(safe-area-inset-left));
+    box-sizing: border-box;
+    min-width: 400px;
+    min-height: 380px;
+}
+
+.top-bar {
+    position: relative;
+    width: 100%;
+    z-index: 20;
+    flex-shrink: 0;
+    flex-grow: 2;
+}
+
+.top-bar-content {
+    width: 100%;
+    max-width: 800px;
+    height: 100%;
+    margin: 0 auto;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+/* Repositioning icons in v3 */
+.footer-content .info-icon,
+.footer-content .edit-btn {
+    font-size: 1.5em;
+    cursor: pointer;
+    padding: 0 20px;
+}
+
+.digital-clock-container {
+    text-align: center;
+    cursor: pointer;
+}
+
+.digital-time {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    font-size: 2.5em;
+    font-weight: bold;
+    color: var(--lime-green);
+    font-family: 'Share Tech Mono', monospace;
+}
+
+#am-pm {
+    font-size: 0.5em;
+    margin-left: 5px;
+    color: var(--lime-green);
+}
+
+.local-info {
+    font-size: 0.9em;
+    color: var(--lime-green);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#local-city-gmt {
+    color: var(--lime-green);
+}
+
+.separator {
+    margin: 0 4px;
+}
+
+.local-clock-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    flex-grow: 7;
+    min-height: 0;
+    padding: 10px;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.clock-face {
+    position: relative;
+    border-radius: 50%;
+    border: 2px solid var(--dark-gray);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    aspect-ratio: 1 / 1;
+    width: 100%;
+    max-width: 100%;
+    touch-action: none;
+}
+
+#offset-arc {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    z-index: 1;
+    --arc-color: transparent;
+    --start-angle: 0deg;
+    --end-angle: 0deg;
+    background: conic-gradient(
+        from var(--start-angle),
+        var(--arc-color) 0deg var(--end-angle),
+        transparent var(--end-angle)
+    );
+    mask: radial-gradient(circle, transparent 69%, black 69%);
+    -webkit-mask: radial-gradient(circle, transparent 69%, black 69%);
+    display: none; /* Hidden by default */
+    pointer-events: none;
+}
+
+.half {
+    width: 100%;
+    height: 50%;
+    position: absolute;
+    overflow: hidden;
+}
+
+.top-half {
+    top: 0;
+    background-color: var(--blue-jean);
+}
+
+.bottom-half {
+    bottom: 0;
+    background-color: var(--black-color);
+}
+
+.marker-hour {
+    position: absolute;
+    background-color: var(--white-color);
+    width: 1px;
+    height: 45px;
+    z-index: 2;
+}
+
+.marker-30min {
+    position: absolute;
+    background-color: var(--white-color);
+    width: 1px;
+    height: 30px;
+    opacity: 0.8;
+    z-index: 2;
+}
+
+.marker-15min {
+    position: absolute;
+    background-color: var(--white-color);
+    width: 1px;
+    height: 15px;
+    opacity: 0.6;
+    z-index: 2;
+}
+
+.hour-number-24 {
+    position: absolute;
+    font-size: 1.1em;
+    color: var(--white-color);
+    font-family: 'Rationale', sans-serif;
+    z-index: 2;
+}
+
+.major-hour-number {
+    position: absolute;
+    font-size: 1.5em;
+    color: var(--white-color);
+    font-family: 'Rationale', sans-serif;
+    z-index: 2;
+}
+
+.hand {
+    position: absolute;
+    bottom: 50%;
+    left: 50%;
+    transform-origin: bottom;
+    z-index: 5;
+    height: 45%;
+    display: flex;
+    justify-content: center;
+}
+
+.local-hand {
+    width: 3px;
+    background-color: var(--lime-green);
+    color: var(--lime-green);
+}
+
+.other-hand {
+    width: 2px;
+    background-color: var(--white-color);
+    opacity: 0.7;
+    color: var(--white-color);
+}
+
+.hand-marker {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    background-color: var(--white-color);
+    border-radius: 50%;
+    z-index: 10;
+}
+
+.city-on-hand {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-size: 12px;
+    font-weight: bold;
+    white-space: nowrap;
+    color: inherit;
+    padding: 0 0.5em;
+    font-family: 'Helvetica Neue', sans-serif;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.time-diff-text {
+    position: absolute;
+    top: 70%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1em;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.date-diff-indicator {
+    font-size: 9px;
+    font-weight: bold;
+    color: var(--black-color);
+    background-color: var(--lime-green);
+    border-radius: 50%;
+    width: 14px;
+    height: 14px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 4px;
+    line-height: 1;
+}
+
+.footer {
+    height: 80px;
+    align-items: flex-start;
+    margin-top: 20px;
+    position: relative; /* z-index를 적용하기 위해 추가 */
+    z-index: 100; /* 다른 요소들 위에 오도록 설정 */
+}
+
+.footer-content {
+    width: 100%;
+    max-width: 800px;
+    height: 100%;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.app-info {
+    font-size: 1em;
+    color: #666;
+    flex-shrink: 0;
+    text-align: center;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.8);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #222;
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 400px;
+    text-align: left;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.modal-content h3 {
+    margin-top: 0;
+    text-align: center;
+}
+
+#city-list {
+    list-style: none;
+    padding: 0;
+}
+
+#city-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #444;
+    font-family: 'Offside', sans-serif;
+}
+
+#city-list li button {
+    background: none;
+    border: none;
+    color: var(--white-color);
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+#city-name-input, #timezone-input, #city-search-input {
+    width: 100%;
+    padding: 8px;
+    margin: 10px 0;
+    box-sizing: border-box;
+    background-color: #444;
+    border: 1px solid #666;
+    color: white;
+    border-radius: 5px;
+}
+
+#search-results {
+    list-style: none;
+    padding: 0;
+    margin: -10px 0 10px 0;
+    background-color: #3a3a3a;
+    border-radius: 5px;
+    max-height: 150px;
+    overflow-y: auto;
+    border: 1px solid #666;
+}
+
+#search-results li {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #555;
+}
+
+#search-results li:last-child {
+    border-bottom: none;
+}
+
+#search-results li:hover {
+    background-color: #555;
+}
+
+#timezone-input {
+    background-color: #333;
+    color: #ccc;
+}
+
+.modal-actions {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.modal-actions button {
+    background-color: var(--lime-green);
+    color: black;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 0 5px;
+}
+
+.modal-actions button:last-child {
+    background-color: #555;
+    color: white;
+}
+
+#city-list {
+    max-height: 240px; /* 5 items * ( (10px padding * 2) + ~28px font ) */
+    overflow-y: auto;
+}
+
+.sun-icon, .moon-icon {
+    position: absolute;
+    font-size: 1.2em;
+    z-index: 1;
+}
+
+.sun-icon {
+    top: 12%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.moon-icon {
+    bottom: 12%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+@media (max-width: 600px) {
+    .digital-time {
+        font-size: 2em;
+    }
+    .local-info {
+        font-size: 0.8em;
+    }
+    .hour-number-24 {
+        font-size: 1em;
+    }
+    .major-hour-number {
+        font-size: 1.3em;
+    }
+    .city-on-hand {
+        font-size: 10px;
+    }
+}
+
+.rotation-indicator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50px;
+    height: 50px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 15;
+    pointer-events: none;
+    cursor: pointer;
+}
+
+.rotation-indicator.show {
+    opacity: 0.7;
+    pointer-events: auto;
+}
+
+.rotation-indicator.left {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.12-9.36L1 10"/></svg>');
+}
+
+.rotation-indicator.right {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>');
+}

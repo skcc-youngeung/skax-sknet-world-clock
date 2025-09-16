@@ -1,0 +1,18 @@
+services:
+  world-clock:
+    image: nginx:alpine
+    container_name: world-clock
+    hostname: world-clock
+    restart: always
+    ports:
+      - "8082:80"
+    volumes:
+      - ./html:/usr/share/nginx/html
+    environment:
+      - TZ=Asia/Seoul
+    networks:
+      - server-base-net
+
+networks:
+  server-base-net:
+    external: true

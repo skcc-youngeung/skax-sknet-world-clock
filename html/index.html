@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>World Clock</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rationale&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Offside&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="World Clock">
+</head>
+<body>
+    <div class="main-container">
+        <div class="top-bar">
+            <div class="top-bar-content">
+                <div class="digital-clock-container" title="클릭하면 현재 시간으로 돌아갑니다.">
+                    <div class="digital-time">
+                        <span id="current-time-digital"></span>
+                        <span id="am-pm"></span>
+                    </div>
+                    <div class="local-info">
+                        <div id="date-line">
+                            <span id="local-city-date"></span>
+                        </div>
+                        <div id="city-info-line">
+                            <span id="local-city-name"></span>
+                            <span class="separator">·</span>
+                            <span id="local-city-gmt"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="local-clock-container">
+            <div class="clock-face" id="clock-face">
+                <div id="offset-arc"></div>
+                <div class="half top-half"></div>
+                <div class="half bottom-half"></div>
+                <div class="sun-icon">☀️</div>
+                <div class="moon-icon">🌙</div>
+                <div id="rotation-indicator" class="rotation-indicator"></div>
+                <!-- Hour numbers and minute markers will be added dynamically by JavaScript -->
+                
+                <!-- Clock hands will be added dynamically by JavaScript -->
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="footer-content">
+                <span class="edit-btn">⚙️</span>
+                <span class="app-info">WORLD CLOCK</span>
+                <span class="info-icon">ℹ️</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="info-modal" class="modal">
+        <div class="modal-content" style="text-align: left;">
+            <h3>SK-Net World Clock 안내</h3>
+            <p>해외 출장 준비나 글로벌 미팅을 할 때,<br>“지금 거기는 몇 시지?” 하고 헷갈린 적 많으시죠?</p>
+            <p>그럴 때 간단하게 시차를 확인할 수 있도록 만든 도구가 바로 SK-Net World Clock입니다.</p>
+            <h4>주요 기능</h4>
+              <ul>
+                <li><strong>도시 추가/편집:</strong> 하단의 톱니바퀴(⚙️) 아이콘을 눌러 도시를 관리하세요. 도시 이름으로 검색하면 전 세계 주요 도시의 시간대를 자동으로 불러옵니다. <strong>(서머타임 자동 적용)</strong></li>
+                <li><strong>커스텀 이름:</strong> 'LA 오피스'처럼 시계에 표시될 나만의 도시 이름을 지정할 수 있습니다.</li>
+                <li><strong>시간 탐색:</strong> 시계판 위에서 마우스 휠, 드래그, 또는 터치로 시간을 돌려보며 다른 도시의 시간을 쉽게 확인할 수 있습니다.</li>
+              </ul>
+            <h4>알아두면 편리한 팁</h4>
+              <ul>
+                <li><strong>빠른 대표 도시 변경:</strong> 다른 도시의 시계 바늘을 클릭하면 해당 도시가 즉시 새로운 기준 시간(녹색 바늘)이 됩니다.</li>
+                <li><strong>현재 시간으로 복귀:</strong> 상단의 디지털 시계 또는 시간 조작 시 중앙에 나타나는 화살표 아이콘(↩️)을 클릭하면 즉시 현재 시간으로 돌아옵니다.</li>
+                <li><strong>날짜 차이 확인:</strong> 다른 도시의 날짜가 하루 빠르거나 늦을 경우, 시계 바늘 끝에 `+1` 또는 `-1`로 표시됩니다.</li>
+              </ul>
+            <div class="modal-actions">
+                <button onclick="hideInfoModal()">닫기</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="city-modal" class="modal">
+        <div class="modal-content">
+            <h3>도시 목록 편집</h3>
+            <ul id="city-list"></ul>
+            <div class="modal-actions">
+                <button onclick="hideCityModal()">닫기</button>
+                <button onclick="showAddCityModal()">도시 추가</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="add-edit-modal" class="modal">
+        <div class="modal-content">
+            <h3 id="add-edit-title">도시 추가</h3>
+            
+            <label for="city-search-input">도시 검색:</label>
+            <input type="text" id="city-search-input" placeholder="예: London">
+            <ul id="search-results"></ul>
+
+            <label for="city-name-input">표시될 이름:</label>
+            <input type="text" id="city-name-input" placeholder="예: 런던 사무실">
+            
+            <label for="timezone-input">IANA 시간대:</label>
+            <input type="text" id="timezone-input" readonly>
+
+            <div class="modal-actions">
+                <button onclick="saveCity()">저장</button>
+                <button onclick="hideAddEditModal()">취소</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="timezones.js"></script>
+    <script src="script.js?v=2"></script>
+</body>
+</html>
